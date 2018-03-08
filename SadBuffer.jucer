@@ -13,7 +13,7 @@
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="5.1.1">
   <MAINGROUP id="n0DUSF" name="Sad Buffer">
     <GROUP id="{1B3BCFDA-8AEC-19B1-375B-6F3E70AEFE7C}" name="assets">
-      <FILE id="g57i5z" name="sad.gif" compile="0" resource="1" file="../../../Desktop/sad.gif"/>
+      <FILE id="W0GwmI" name="sad.gif" compile="0" resource="1" file="assets/sad.gif"/>
     </GROUP>
     <GROUP id="{8E89BF79-2C68-0512-37E9-00A464EF6094}" name="Source">
       <FILE id="MckTFB" name="PluginProcessor.cpp" compile="1" resource="0"
