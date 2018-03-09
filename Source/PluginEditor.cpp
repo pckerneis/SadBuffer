@@ -35,15 +35,14 @@ BufferGlitchAudioProcessorEditor::BufferGlitchAudioProcessorEditor (BufferGlitch
     const auto dark = Colours::darkgrey;
     const auto light = Colours::grey;
     
-    //CustomLookAndFeel::setDefaultLookAndFeel(&lf);
-    
+    setLookAndFeel(&lf);
+        
     freezeButton.setButtonText ("Freeze");
     freezeButton.setClickingTogglesState (true);
     freezeButton.addListener (this);
     freezeButton.setConnectedEdges(Button::ConnectedOnRight);
     freezeButton.setColour(TextButton::buttonColourId, dark);
     freezeButton.setColour(TextButton::buttonOnColourId, light);
-    freezeButton.setLookAndFeel(&lf);
     addAndMakeVisible(freezeButton);
     
     captureButton.setButtonText ("Capture");
@@ -52,7 +51,6 @@ BufferGlitchAudioProcessorEditor::BufferGlitchAudioProcessorEditor (BufferGlitch
     captureButton.setEnabled (false);
     captureButton.setConnectedEdges (Button::ConnectedOnLeft);
     captureButton.setColour (TextButton::buttonColourId, dark);
-    captureButton.setLookAndFeel (&lf);
     addAndMakeVisible(captureButton);
     
     bufferSizeSlider.setSliderStyle (Slider::LinearBar);
@@ -61,7 +59,6 @@ BufferGlitchAudioProcessorEditor::BufferGlitchAudioProcessorEditor (BufferGlitch
     bufferSizeSlider.setValue (1024);
     bufferSizeSlider.addListener( this);
     bufferSizeSlider.setColour (Slider::trackColourId, light.withAlpha(0.75f));
-    bufferSizeSlider.setLookAndFeel (&lf);
     addAndMakeVisible(bufferSizeSlider);
     
     processor.setBufferSize(1024);
@@ -73,12 +70,6 @@ BufferGlitchAudioProcessorEditor::BufferGlitchAudioProcessorEditor (BufferGlitch
     glitchAmountSlider.setValue(0.);
     glitchAmountSlider.addListener(this);
     glitchAmountSlider.setColour(Slider::trackColourId, light.withAlpha(0.75f));
-    glitchAmountSlider.setLookAndFeel (&lf);
-    
-    for (auto c : glitchAmountSlider.getChildren())
-        if (auto l = dynamic_cast<Label*>(c))
-            l->addListener(this);
-    
     addAndMakeVisible(glitchAmountSlider);
     
     cpuLabel.setText("CPU overload", dontSendNotification);
@@ -86,7 +77,6 @@ BufferGlitchAudioProcessorEditor::BufferGlitchAudioProcessorEditor (BufferGlitch
     addAndMakeVisible(cpuLabel);
     
     bufferSizeLabel.setText("Block size", dontSendNotification);
-    bufferSizeLabel.setLookAndFeel(&lf);
     addAndMakeVisible(bufferSizeLabel);
     
     bgImage = ImageFileFormat::loadFrom (BinaryData::sad_gif, (size_t) BinaryData::sad_gifSize);
@@ -120,7 +110,7 @@ void BufferGlitchAudioProcessorEditor::paint (Graphics& g)
     
     if (infoShown)
     {
-        const String version = JUCEApplication::getInstance()->getApplicationVersion();
+        const String version = "1.0.1";
         const String text = "v." + version + " made with JUCE by pc.kerneis";
         
         g.setColour(Colours::lightgrey);
