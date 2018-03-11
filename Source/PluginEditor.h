@@ -61,10 +61,13 @@ public:
         {
             if (const AudioParameterFloat* param = dynamic_cast<AudioParameterFloat*> (params[i]))
             {
+                if (param == processor.glitchAmount)
+                    glitchAmountSlider.setValue (*param * 100., dontSendNotification);
+            }
+            else if (const AudioParameterInt* param = dynamic_cast<AudioParameterInt*> (params[i]))
+            {
                 if (param == processor.bufferSize)
                     bufferSizeSlider.setValue (*param, dontSendNotification);
-                else if (param == processor.glitchAmount)
-                    glitchAmountSlider.setValue (*param * 100., dontSendNotification);
             }
             else if (const AudioParameterBool* param = dynamic_cast<AudioParameterBool*> (params[i]))
                 if (param == processor.freezeMode)

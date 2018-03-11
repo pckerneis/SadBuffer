@@ -103,7 +103,7 @@ private:
     AudioSampleBuffer frozenBuffer;
     Mode currentMode;
     
-    AudioParameterFloat* bufferSize;
+    AudioParameterInt* bufferSize;
     AudioParameterFloat* glitchAmount;
     AudioParameterBool* freezeMode;
     

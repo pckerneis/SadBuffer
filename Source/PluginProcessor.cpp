@@ -42,7 +42,7 @@ BufferGlitchAudioProcessor::BufferGlitchAudioProcessor()
 {
     currentMode = Mode::BYPASS;
     
-    addParameter (bufferSize = new AudioParameterFloat ("blocksize", "Block size", 16, maxBufferSize, 1024));
+    addParameter (bufferSize = new AudioParameterInt ("blocksize", "Block size", 16, maxBufferSize, 1024));
     addParameter (glitchAmount = new AudioParameterFloat ("cpuoverload", "CPU overload", 0., 1., 0.));
     addParameter (freezeMode = new AudioParameterBool ("freeze", "Freeze", false));
 }

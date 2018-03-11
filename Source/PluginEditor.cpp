@@ -56,18 +56,16 @@ BufferGlitchAudioProcessorEditor::BufferGlitchAudioProcessorEditor (BufferGlitch
     bufferSizeSlider.setSliderStyle (Slider::LinearBar);
     bufferSizeSlider.setRange (32, p.maxBufferSize, 1.0);
     bufferSizeSlider.setTextValueSuffix (" samples");
-    bufferSizeSlider.setValue (1024);
+    bufferSizeSlider.setValue (1024, dontSendNotification);
     bufferSizeSlider.addListener( this);
     bufferSizeSlider.setColour (Slider::trackColourId, light.withAlpha(0.75f));
     addAndMakeVisible(bufferSizeSlider);
-    
-    processor.setBufferSize(1024);
 
     glitchAmountSlider.setSliderStyle(Slider::LinearBar);
     glitchAmountSlider.setRange (0, 100, 0.1);
     glitchAmountSlider.setTextBoxStyle(Slider::TextBoxLeft, false, 100, 30);
     glitchAmountSlider.setTextValueSuffix ("%");
-    glitchAmountSlider.setValue(0.);
+    glitchAmountSlider.setValue(0., dontSendNotification);
     glitchAmountSlider.addListener(this);
     glitchAmountSlider.setColour(Slider::trackColourId, light.withAlpha(0.75f));
     addAndMakeVisible(glitchAmountSlider);
@@ -156,7 +154,7 @@ void BufferGlitchAudioProcessorEditor::buttonClicked(Button* b)
 void BufferGlitchAudioProcessorEditor::sliderValueChanged(Slider* s)
 {
     if (s == &bufferSizeSlider)
-        processor.setBufferSize(int(s->getValue()));
+        processor.setBufferSize(s->getValue());
     
     else if (s == &glitchAmountSlider)
         processor.setGlitchAmount(s->getValue() * 0.01f);
