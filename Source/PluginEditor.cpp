@@ -96,6 +96,7 @@ BufferGlitchAudioProcessorEditor::BufferGlitchAudioProcessorEditor (BufferGlitch
 
 BufferGlitchAudioProcessorEditor::~BufferGlitchAudioProcessorEditor()
 {
+    setLookAndFeel(nullptr);
 }
 
 //==============================================================================
@@ -110,7 +111,7 @@ void BufferGlitchAudioProcessorEditor::paint (Graphics& g)
     
     if (infoShown)
     {
-        const String version = "1.0.1";
+        const String version = "1.0.2";
         const String text = "v." + version + " made with JUCE by pc.kerneis";
         
         g.setColour(Colours::lightgrey);

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="AHbxz0" name="Sad Buffer" displaySplashScreen="1" reportAppUsage="1"
-              splashScreenColour="Dark" projectType="audioplug" version="1.0.0"
-              bundleIdentifier="com.piew.SadBuffer" includeBinaryInAppConfig="1"
+              splashScreenColour="Dark" projectType="audioplug" version="1.0.2"
+              bundleIdentifier="com.pck.SadBuffer" includeBinaryInAppConfig="1"
               cppLanguageStandard="11" buildVST="1" buildVST3="0" buildAU="0"
-              buildAUv3="0" buildRTAS="0" buildAAX="0" buildStandalone="1"
-              enableIAA="0" pluginName="SadBuffer" pluginDesc="SadBuffer" pluginManufacturer="Piew"
-              pluginManufacturerCode="Piew" pluginCode="Ahbx" pluginChannelConfigs=""
-              pluginIsSynth="0" pluginWantsMidiIn="0" pluginProducesMidiOut="0"
-              pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0" pluginAUExportPrefix="SadBufferAU"
-              pluginRTASCategory="" aaxIdentifier="com.yourcompany.SadBuffer"
-              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="5.1.1">
+              buildAUv3="0" buildRTAS="0" buildAAX="0" enableIAA="0" pluginName="SadBuffer"
+              pluginDesc="SadBuffer" pluginManufacturer="pckerneis" pluginManufacturerCode="pck"
+              pluginCode="Ahbx" pluginChannelConfigs="" pluginIsSynth="0" pluginWantsMidiIn="0"
+              pluginProducesMidiOut="0" pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0"
+              pluginAUExportPrefix="SadBufferAU" pluginRTASCategory="" aaxIdentifier="com.pck.SadBuffer"
+              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="5.2.1">
   <MAINGROUP id="n0DUSF" name="Sad Buffer">
     <GROUP id="{1B3BCFDA-8AEC-19B1-375B-6F3E70AEFE7C}" name="assets">
       <FILE id="W0GwmI" name="sad.gif" compile="0" resource="1" file="assets/sad.gif"/>
@@ -69,5 +68,5 @@
     <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_video" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
   </MODULES>
-  <JUCEOPTIONS JUCE_QUICKTIME="disabled" JUCE_PLUGINHOST_AU="disabled"/>
+  <JUCEOPTIONS JUCE_QUICKTIME="disabled" JUCE_PLUGINHOST_AU="0"/>
 </JUCERPROJECT>
