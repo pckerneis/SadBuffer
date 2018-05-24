@@ -35,6 +35,7 @@
 class BufferGlitchAudioProcessor  : public AudioProcessor
 {
 public:
+    //==============================================================================
     enum Mode {
         BYPASS,
         FREEZE,
@@ -42,6 +43,7 @@ public:
         CAPTURE
     };
     
+    //==============================================================================
     const static int maxBufferSize = 4096;
         
     //==============================================================================
@@ -86,18 +88,11 @@ public:
     void unfreeze() { currentMode = Mode::BYPASS; *freezeMode = false;}
     
     //==============================================================================
-    void setBufferSize (int newSize)
-    {
-        *bufferSize = newSize;
-    }
-    void setGlitchAmount (float newAmount)
-    {
-        *glitchAmount = newAmount;
-    }
+    void setBufferSize (int newSize) { *bufferSize = newSize; }
+    void setGlitchAmount (float newAmount) { *glitchAmount = newAmount; }
+    
 private:
     friend class BufferGlitchAudioProcessorEditor;
-    
-    void freezeBuffer();
     
     //==============================================================================
     AudioSampleBuffer frozenBuffer;

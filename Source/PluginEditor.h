@@ -30,8 +30,6 @@
 #include "LookAndFeel.h"
 
 //==============================================================================
-/**
-*/
 class BufferGlitchAudioProcessorEditor
     :   public AudioProcessorEditor,
         public Button::Listener,
@@ -53,27 +51,9 @@ public:
     void editorShown (Label* label, TextEditor& editor) override;    
     void labelTextChanged (Label* labelThatHasChanged) override {}
     void editorHidden (Label*, TextEditor&) override {}
+    
     //==============================================================================
-    void timerCallback() override
-    {
-        const OwnedArray<AudioProcessorParameter>& params = getAudioProcessor()->getParameters();
-        for (int i = 0; i < params.size(); ++i)
-        {
-            if (const AudioParameterFloat* param = dynamic_cast<AudioParameterFloat*> (params[i]))
-            {
-                if (param == processor.glitchAmount)
-                    glitchAmountSlider.setValue (*param * 100., dontSendNotification);
-            }
-            else if (const AudioParameterInt* param = dynamic_cast<AudioParameterInt*> (params[i]))
-            {
-                if (param == processor.bufferSize)
-                    bufferSizeSlider.setValue (*param, dontSendNotification);
-            }
-            else if (const AudioParameterBool* param = dynamic_cast<AudioParameterBool*> (params[i]))
-                if (param == processor.freezeMode)
-                    setFreezeButtonState(*param);
-        }
-    }
+    void timerCallback() override;
 
 private:
     void toggleFreezeState();
@@ -81,8 +61,7 @@ private:
     
     void toggleInfoState();
     
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
+    //==============================================================================
     BufferGlitchAudioProcessor& processor;
     
     TextButton freezeButton;
@@ -98,6 +77,7 @@ private:
     Image bgImage;
     
     CustomLookAndFeel lf;
-
+    
+    //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BufferGlitchAudioProcessorEditor)
 };

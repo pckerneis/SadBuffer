@@ -62,9 +62,8 @@ BufferGlitchAudioProcessorEditor::BufferGlitchAudioProcessorEditor (BufferGlitch
     addAndMakeVisible(bufferSizeSlider);
 
     glitchAmountSlider.setSliderStyle(Slider::LinearBar);
-    glitchAmountSlider.setRange (0, 100, 0.1);
+    glitchAmountSlider.setRange (0, 1, 0.001);
     glitchAmountSlider.setTextBoxStyle(Slider::TextBoxLeft, false, 100, 30);
-    glitchAmountSlider.setTextValueSuffix ("%");
     glitchAmountSlider.setValue(0., dontSendNotification);
     glitchAmountSlider.addListener(this);
     glitchAmountSlider.setColour(Slider::trackColourId, light.withAlpha(0.75f));
@@ -84,7 +83,7 @@ BufferGlitchAudioProcessorEditor::BufferGlitchAudioProcessorEditor (BufferGlitch
     infoButton.addListener (this);
     infoButton.setLookAndFeel (&lf);
     infoButton.setColour (TextButton::buttonColourId, dark);
-    infoButton.setColour(TextButton::buttonOnColourId, dark);
+    infoButton.setColour (TextButton::buttonOnColourId, dark);
     infoButton.setColour (TextButton::textColourOnId, light);
     infoButton.setColour (TextButton::textColourOffId, light);
     addAndMakeVisible(infoButton);
@@ -109,7 +108,7 @@ void BufferGlitchAudioProcessorEditor::paint (Graphics& g)
     
     if (infoShown)
     {
-        const String version = "1.0.2";
+        const String version = "1.1.0";
         const String text = "v." + version + " made with JUCE by pc.kerneis";
         
         g.setColour(Colours::lightgrey);
@@ -157,7 +156,7 @@ void BufferGlitchAudioProcessorEditor::sliderValueChanged(Slider* s)
         processor.setBufferSize(s->getValue());
     
     else if (s == &glitchAmountSlider)
-        processor.setGlitchAmount(s->getValue() * 0.01f);
+        processor.setGlitchAmount(s->getValue());
 }
 
 void BufferGlitchAudioProcessorEditor::editorShown (Label* label, TextEditor& editor)
@@ -165,6 +164,27 @@ void BufferGlitchAudioProcessorEditor::editorShown (Label* label, TextEditor& ed
     Font editorFont (lf.getDefaultFont());
     editorFont.setItalic (true);
     editor.setFont (editorFont);
+}
+
+void BufferGlitchAudioProcessorEditor::timerCallback()
+{
+    const OwnedArray<AudioProcessorParameter>& params = getAudioProcessor()->getParameters();
+    for (int i = 0; i < params.size(); ++i)
+    {
+        if (const AudioParameterFloat* param = dynamic_cast<AudioParameterFloat*> (params[i]))
+        {
+            if (param == processor.glitchAmount)
+                glitchAmountSlider.setValue (*param, dontSendNotification);
+        }
+        else if (const AudioParameterInt* param = dynamic_cast<AudioParameterInt*> (params[i]))
+        {
+            if (param == processor.bufferSize)
+                bufferSizeSlider.setValue (*param, dontSendNotification);
+        }
+        else if (const AudioParameterBool* param = dynamic_cast<AudioParameterBool*> (params[i]))
+            if (param == processor.freezeMode)
+                setFreezeButtonState(*param);
+    }
 }
 
 void BufferGlitchAudioProcessorEditor::toggleFreezeState()

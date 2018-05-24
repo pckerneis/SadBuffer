@@ -144,6 +144,13 @@ bool BufferGlitchAudioProcessor::isBusesLayoutSupported (const BusesLayout& layo
 
 void BufferGlitchAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
+    // Lambda for random picking
+    auto chooseIfMuted = [this]()
+    {
+        const float pick = Random::getSystemRandom().nextFloat();
+        return (pick < *glitchAmount);
+    };
+    
     const int totalNumInputChannels  = getTotalNumInputChannels();
     const int totalNumOutputChannels = getTotalNumOutputChannels();
 
@@ -151,7 +158,7 @@ void BufferGlitchAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
     for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
     
-    // Freeze
+    // Process audio
     switch (currentMode)
     {
         case Mode::BYPASS:
@@ -160,7 +167,7 @@ void BufferGlitchAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
                 currentMode = Mode::FREEZE;
             else
             {
-                // CPU overload can still happen in bypass...
+                // CPU overload processing
                 int destPosition = 0;
                 
                 // Iterate through the destination buffer
@@ -172,8 +179,7 @@ void BufferGlitchAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
                         bufferReadPosition = 0;
                             
                         // We decide here if the next emulated buffer is "muted"
-                        const float pick = Random::getSystemRandom().nextFloat();
-                        mutedBuffer = (pick < *glitchAmount);
+                        mutedBuffer = chooseIfMuted();
                     }
                         
                     const int remainingInSource = userBufferSize - bufferReadPosition;
@@ -182,7 +188,7 @@ void BufferGlitchAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
                     const int numThisTime = jmin (remainingInSource, remainingInDest);
                         
                     if (mutedBuffer)
-                        buffer.clear(destPosition, numThisTime);
+                        buffer.clear (destPosition, numThisTime);
                         
                     destPosition += numThisTime;
                     bufferReadPosition += numThisTime;
@@ -193,13 +199,13 @@ void BufferGlitchAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
             
         case Mode::FREEZE:
         {
+            // Reset everything as we're about to make a new capture
             frozenBuffer.clear();
             bufferWritePosition = 0;
             bufferReadPosition = 0;
             
             // We decide here if the first emulated buffer is "muted"
-            const float pick = Random::getSystemRandom().nextFloat();
-            mutedBuffer = (pick < *glitchAmount);
+            mutedBuffer = chooseIfMuted();
             
             currentMode = Mode::CAPTURE;
         }
@@ -242,8 +248,7 @@ void BufferGlitchAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
                         bufferReadPosition = 0;
                         
                         // We decide here if the next emulated buffer is "muted"
-                        const float pick = Random::getSystemRandom().nextFloat();
-                        mutedBuffer = (pick < *glitchAmount);
+                        mutedBuffer = chooseIfMuted();
                     }
                     
                     const int remainingInSource = userBufferSize - bufferReadPosition;
@@ -251,14 +256,14 @@ void BufferGlitchAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
                     
                     const int numThisTime = jmin (remainingInSource, remainingInDest);
                     
-                    
-                    
+                    // When in frozen mode, we need to check if the host is playing or not
                     bool isHostPlaying = true;
                     
                     AudioPlayHead::CurrentPositionInfo info;
+                    
                     if (auto playHead = getPlayHead())
                     {
-                        playHead->getCurrentPosition(info);
+                        playHead->getCurrentPosition (info);
                         isHostPlaying = info.isPlaying;
                     }
                     
@@ -288,15 +293,26 @@ AudioProcessorEditor* BufferGlitchAudioProcessor::createEditor()
 //==============================================================================
 void BufferGlitchAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+	std::unique_ptr<XmlElement> xml(new XmlElement("SadBufferState"));
+	xml->setAttribute("freeze", *freezeMode);
+	xml->setAttribute("blocksize", *bufferSize);
+	xml->setAttribute("cpuoverload", (float)*glitchAmount);
+	copyXmlToBinary(*xml, destData);
 }
 
 void BufferGlitchAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+	std::unique_ptr<XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+
+	if (xmlState.get() != nullptr)
+	{
+		if (xmlState->hasTagName("SadBufferState"))
+		{
+			*freezeMode = xmlState->getBoolAttribute("freeze", false);
+			*bufferSize = xmlState->getIntAttribute("blocksize", 1024);
+			*glitchAmount = (float)xmlState->getDoubleAttribute("cpuoverload", 0.);
+		}
+	}
 }
 
 //==============================================================================
